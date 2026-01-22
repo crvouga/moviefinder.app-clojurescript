@@ -13,7 +13,7 @@
     "start": "npm run backend",
     "preview": "npm install && npm run build && npm run start",
     "test": "clear && npx shadow-cljs compile test && npx shadow-cljs test",
-    "docker:preview": "docker build -t moviefinder-app . && docker run -p 9630:9630 moviefinder-app",
+    "docker:preview": "docker build -t moviefinder-app-clojurescript . && docker run -p 9630:9630 moviefinder-app-clojurescript",
     "cloc": "npx cloc src"
   },
   "devDependencies": {
