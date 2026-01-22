@@ -3,7 +3,7 @@
    [app.feed.edit.frontend]
    [app.feed.feed :as feed]
    [app.feed.feed-db.impl]
-   [app.feed.feed-db.inter :as feed-db]
+   #_[app.feed.feed-db.inter :as feed-db]
    [app.frontend.db :as db]
    [app.frontend.mod :as mod]
    [app.frontend.screen :as screen]
@@ -28,10 +28,10 @@
       (p/put! i [:db/got-query-result media-query-result]))))
 
 
-(defn to-query-result [i]
-  (db/to-query-result i (feed/to-media-query {})))
+#_(defn to-query-result [i]
+    (db/to-query-result i (feed/to-media-query {})))
 
-(defn near-end? [i active-index])
+#_(defn near-end? [i active-index])
 
 (defn- logic [i]
   (p/reg-reducer i ::set (fn [s [_ k v]] (assoc s k v)))
@@ -61,7 +61,7 @@
    [:button.w-full.h-full.overflow-hidden.cursor-pointer.select-none
     {:on-click #(p/put! i [:screen/clicked-link (media-details/to-screen row)])}
     [image-preload/view {:image/url (:media/backdrop-url row)}]
-    [:code ":media/popularity" (-> row :media/popularity)]
+    #_[:code ":media/popularity" (-> row :media/popularity)]
     [image/view {:image/url (:media/poster-url row)
                  :image/alt (:media/title row)
                  :class "w-full h-full"}]]])
@@ -90,6 +90,17 @@
 
 (defn- view [i]
   (let [query-result (db/to-query-result i (feed/to-media-query {}))
+        _datalog {:find  '[?id ?title ?year ?popularity ?genre-ids ?poster-url]
+                  :where '[[?e :media/popularity ?popularity]
+                           [(> ?popularity 80)]
+                           [?e :media/media-type :media-type/movie]
+                           [?e :media/id ?id]
+                           [?e :media/title ?title]
+                           [?e :media/year ?year]
+                           [?e :media/genre-ids ?genre-ids]
+                           [?e :media/poster-url ?poster-url]]
+                  :order '[desc ?popularity]
+                  :limit  30}
         rows (:query-result/rows query-result)]
     [screen/view-screen i :screen/feed
      [view-top-bar i]
