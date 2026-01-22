@@ -1,7 +1,14 @@
 FROM node:18-slim
 
-# Install dependencies
-RUN apt-get update && apt-get install -y curl gnupg ca-certificates
+# Install dependencies including build tools for native modules
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    ca-certificates \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Java 21 (Eclipse Temurin)
 RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptium-archive-keyring.gpg && \
